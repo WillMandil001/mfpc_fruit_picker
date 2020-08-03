@@ -1,3 +1,4 @@
+import os
 import csv
 import math as m
 import time
@@ -7,6 +8,7 @@ import itertools
 import franka_panda
 import pybullet_data
 import strawberry_cluster
+import strawberry_multi_link_cluster
 import franka_panda_new_EE
 import numpy as np
 import pybullet as p
@@ -16,7 +18,8 @@ import pybullet as p
 trajectories = []
 # trajectories_cartesian_0_05_upsidedown_ee0_003
 # trajectories_cartesian_0_05
-with open('trajectories_cartesian_0_05_upsidedown_ee0_003.csv', newline='') as csvfile:
+
+with open(os.path.expanduser('~/trajectories_cartesian_0_05_upsidedown_ee0_003.csv'), newline='') as csvfile:
 	spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
 	i = 0
 	for row in spamreader:
@@ -88,7 +91,8 @@ for traj in trajectories:
 	start_pose[2] = start_pose[2] + stem_length + strawberry_radius
 	start_pose[0] += 0.02
 	start_ori = p.getQuaternionFromEuler([(-m.pi / 2), 0, 0])
-	strawberry_3 = strawberry_cluster.StrawberryCluster(p, start_pose, start_ori, "models/clusters_urdf/strawberry_cluster.urdf")
+	# strawberry_3 = strawberry_cluster.StrawberryCluster(p, start_pose, start_ori, "models/clusters_urdf/strawberry_cluster.urdf")
+	strawberry_3 = strawberry_cluster.StrawberryCluster(p, start_pose, start_ori, "models/clusters_urdf/strawberry_multi_link.urdf")
 
 	# ## load strawberry cluster:
 	# start_pose = []
@@ -132,6 +136,7 @@ for traj in trajectories:
 		cluster_p_state = p.getJointState(strawberry_3.pendulum, 2)[0]
 		cluster_y_state = p.getJointState(strawberry_3.pendulum, 3)[0]
 		strawberry_3.pd_controller_step(cluster_r_state, cluster_p_state, cluster_y_state)
+
 
 		# # Strawberry4 PID controller:
 		# cluster_r_state = p.getJointState(strawberry_4.pendulum, 1)[0]

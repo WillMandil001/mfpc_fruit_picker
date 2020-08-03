@@ -32,8 +32,7 @@ class StrawberryCluster(object):
 		self.p = p
 
 	def pd_controller_step(self, roll, pitch, yaw):
-		print(roll, pitch, yaw)
-		kp = 0.1
+		kp = 0.01
 		ki = 0.0
 		kd = 0.01
 		maxForce = 0
