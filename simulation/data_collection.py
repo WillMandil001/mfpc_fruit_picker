@@ -29,7 +29,7 @@ cluster_order = [[1,0,0,0,0],
 				[1,0,0,1,1],
 				[1,0,0,0,1],]
 
-with open(os.path.expanduser('~/trajectories_cartesian_0_05_upsidedown_ee0_003.csv'), newline='') as csvfile:
+with open(os.path.expanduser('~/trajectories_cartesian_circle.csv'), newline='') as csvfile:
 	spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
 	i = 0
 	for row in spamreader:
@@ -107,7 +107,7 @@ for current_cluster in cluster_order:
 			start_pose_2 = copy.deepcopy(strawberry_pose)
 			stem_length = 0.15
 			strawberry_radius = 0.015 + 0.06  # 0.075
-			start_pose_2[2] = start_pose_2[2] + stem_length + strawberry_radius + (random.uniform(-1, 1) * 0.01)
+			start_pose_2[2] = start_pose_2[2] + stem_length + strawberry_radius + (random.uniform(0, -2) * 0.01)
 			start_pose_2[1] += (random.uniform(-1, 1) * 0.01)
 			start_pose_2[0] += 0.02 + (random.uniform(-1, 1) * 0.01)
 			r1 = (random.uniform(-10, 10) * m.pi) / 180
@@ -125,7 +125,7 @@ for current_cluster in cluster_order:
 			start_pose_3 = copy.deepcopy(strawberry_pose)
 			stem_length = 0.15
 			strawberry_radius = 0.015 + 0.06  # 0.075 
-			start_pose_3[2] = start_pose_3[2] + stem_length + strawberry_radius  + (random.uniform(-1, 1) * 0.01)
+			start_pose_3[2] = start_pose_3[2] + stem_length + strawberry_radius  + (random.uniform(0, -2) * 0.01)
 			start_pose_3[1] += 0.02 + (random.uniform(-1, 1) * 0.01)
 			start_pose_3[0] += (random.uniform(-1, 1) * 0.01)
 			r1 = (random.uniform(-10, 10) * m.pi) / 180
@@ -143,7 +143,7 @@ for current_cluster in cluster_order:
 			start_pose_4 = copy.deepcopy(strawberry_pose)
 			stem_length = 0.15
 			strawberry_radius = 0.015 + 0.06  # 0.075
-			start_pose_4[2] = start_pose_4[2] + stem_length + strawberry_radius + (random.uniform(-1, 1) * 0.01)
+			start_pose_4[2] = start_pose_4[2] + stem_length + strawberry_radius + (random.uniform(0, -2) * 0.01)
 			start_pose_4[1] += (random.uniform(-1, 1) * 0.01)
 			start_pose_4[0] -= 0.02 + (random.uniform(-1, 1) * 0.01)
 			r1 = (random.uniform(-10, 10) * m.pi) / 180
@@ -155,13 +155,13 @@ for current_cluster in cluster_order:
 			start_pose_4 = [False]
 			start_ori_4 = [False]
 
-		## load D - BEHIND strawberry:
+		## load B - BEHIND strawberry:
 		if current_cluster[4] == 1:
 			start_pose_5 = []
 			start_pose_5 = copy.deepcopy(strawberry_pose)
 			stem_length = 0.15
 			strawberry_radius = 0.015 + 0.06  # 0.075
-			start_pose_5[2] = start_pose_5[2] + stem_length + strawberry_radius + (random.uniform(-1, 1) * 0.01)
+			start_pose_5[2] = start_pose_5[2] + stem_length + strawberry_radius + (random.uniform(0, -2) * 0.01) 
 			start_pose_5[1] -= 0.02 + (random.uniform(-1, 1) * 0.01)
 			start_pose_5[0] += (random.uniform(-1, 1) * 0.01)
 			r1 = (random.uniform(-10, 10) * m.pi) / 180
@@ -255,7 +255,6 @@ for current_cluster in cluster_order:
 			p.stepSimulation()
 			time.sleep(timeStep)
 
-
 		p.disconnect()
 		with open('data_set_001/straw_1/data_set_'+ str(file_name) + "_strawberry_data_store_1" +'.csv', "w", newline="") as f:
 			writer = csv.writer(f)
@@ -280,4 +279,4 @@ for current_cluster in cluster_order:
 			writer.writerows(robot_data_store_velocity)
 
 		file_name += 1
-		print(">>>>>>>>>>>>", file_name)
+		print(">>>>>>>>>>>>", file_name, " / ", (len(trajectory_list) * 6))

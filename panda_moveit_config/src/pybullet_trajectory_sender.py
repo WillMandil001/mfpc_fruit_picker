@@ -254,7 +254,6 @@ def generate_data_circle(strawberry_pose, robot):
             plt.show()
             break
 
-
     # # 2. Straight line - Variant angle of pass through
     trajectories = []
     final_pose_orientation = [0, 0, 1, 0]
