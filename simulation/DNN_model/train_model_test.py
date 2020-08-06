@@ -33,7 +33,8 @@ trajectory_full_straw_5) = create_data.build_trajectory_data_for_DNN()
 # 5. strawberry 5 pose at i^n+1 to i^n+10 -> 3 * 10 (30) outputs
 # TOTAL OUTPUT SIZE = 150
 
-
+# 11,000 full trajectory samples. 
+# each of length 400 
 input_trajetories = 
 
 # 1. Build CNN model.

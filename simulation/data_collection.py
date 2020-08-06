@@ -1,8 +1,8 @@
 import os
 import csv
-import math as m
 import time
 import copy
+import h5py
 import socket
 import random
 import itertools
@@ -10,8 +10,21 @@ import franka_panda
 import pybullet_data
 import strawberry_cluster
 import franka_panda_new_EE
+import math as m
 import numpy as np
 import pybullet as p
+import matplotlib.pyplot as plt
+import matplotlib
+
+from PIL import Image
+
+
+def store_hf5_images(hdf5_dir, images):
+    num_images = len(images)
+    file = h5py.File(hdf5_dir + "/" + str(num_images) + ".h5", "w")  # Create a new HDF5 file
+    dataset = file.create_dataset("images", data=images)  # Create a dataset in the file
+    print("saving")
+    file.close()
 
 file_name = 0
 ############# Format trajectories from ros to pybullet:
@@ -82,6 +95,12 @@ for current_cluster in cluster_order:
 		start_pos = [0, 0, 0]
 		Joint_start_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.02]
 		panda = franka_panda_new_EE.FrankaPanda(p, start_pos, timeStep, Joint_start_state)
+
+		##########################################################################################################################################
+		##########################################################################################################################################
+		##########################################################################################################################################
+		##########################################################################################################################################
+
 
 		## load CENTER strawberry:
 		if current_cluster[0] == 1:
@@ -182,8 +201,137 @@ for current_cluster in cluster_order:
 		robot_data_store_position = []
 		robot_data_store_velocity = []
 
+		##########################################################################################################################################
+		##########################################################################################################################################
+		##########################################################################################################################################
+		##########################################################################################################################################
+
+		# Camera_1
+		width = 350
+		height = 350
+		fov = 69.4
+		aspect = width / height
+		near = 0.02
+		far = 1.5
+
+		print(start_pose_1[2] + stem_length + strawberry_radius) 
+		view_matrix_camera_1 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, 0, 0.65], distance=0.1, yaw=-90, pitch=0, roll=0, upAxisIndex=2)
+		view_matrix_camera_2 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, 0, 0.8], distance=0.1, yaw=-90, pitch=-20, roll=0, upAxisIndex=2)
+		view_matrix_camera_3 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, 0.25, 0.65], distance=0.1, yaw=-120, pitch=0, roll=0, upAxisIndex=2)
+		view_matrix_camera_4 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, 0.25, 0.8], distance=0.1, yaw=-120, pitch=-20, roll=0, upAxisIndex=2)
+		view_matrix_camera_5 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, -0.25, 0.65], distance=0.1, yaw=-60, pitch=0, roll=0, upAxisIndex=2)
+		view_matrix_camera_6 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, -0.25, 0.8], distance=0.1, yaw=-60, pitch=-20, roll=0, upAxisIndex=2)
+		view_matrix_camera_7 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, 0.5, 0.65], distance=0.1, yaw=-140, pitch=0, roll=0, upAxisIndex=2)
+		view_matrix_camera_8 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0, -0.5, 0.65], distance=0.1, yaw=-40, pitch=0, roll=0, upAxisIndex=2)
+
+		projection_matrix = p.computeProjectionMatrixFOV(fov, aspect, near, far)
+
+		camera_1_rgb_path = "data_set_002/camera_1/rgb/sample_" + str(file_name)
+		camera_1_depth_path = "data_set_002/camera_1/depth/sample_" + str(file_name)
+		camera_2_rgb_path = "data_set_002/camera_2/rgb/sample_" + str(file_name)
+		camera_2_depth_path = "data_set_002/camera_2/depth/sample_" + str(file_name)
+		camera_3_rgb_path = "data_set_002/camera_3/rgb/sample_" + str(file_name)
+		camera_3_depth_path = "data_set_002/camera_3/depth/sample_" + str(file_name)
+		camera_4_rgb_path = "data_set_002/camera_4/rgb/sample_" + str(file_name)
+		camera_4_depth_path = "data_set_002/camera_4/depth/sample_" + str(file_name)
+		camera_5_rgb_path = "data_set_002/camera_5/rgb/sample_" + str(file_name)
+		camera_5_depth_path = "data_set_002/camera_5/depth/sample_" + str(file_name)
+		camera_6_rgb_path = "data_set_002/camera_6/rgb/sample_" + str(file_name)
+		camera_6_depth_path = "data_set_002/camera_6/depth/sample_" + str(file_name)
+		camera_7_rgb_path = "data_set_002/camera_7/rgb/sample_" + str(file_name)
+		camera_7_depth_path = "data_set_002/camera_7/depth/sample_" + str(file_name)
+		camera_8_rgb_path = "data_set_002/camera_8/rgb/sample_" + str(file_name)
+		camera_8_depth_path = "data_set_002/camera_8/depth/sample_" + str(file_name)
+		
+		try:
+			os.mkdir(camera_1_rgb_path)
+			os.mkdir(camera_1_depth_path)
+			os.mkdir(camera_2_rgb_path)
+			os.mkdir(camera_2_depth_path)
+			os.mkdir(camera_3_rgb_path)
+			os.mkdir(camera_3_depth_path)
+			os.mkdir(camera_4_rgb_path)
+			os.mkdir(camera_4_depth_path)
+			os.mkdir(camera_5_rgb_path)
+			os.mkdir(camera_5_depth_path)
+			os.mkdir(camera_6_rgb_path)
+			os.mkdir(camera_6_depth_path)
+			os.mkdir(camera_7_rgb_path)
+			os.mkdir(camera_7_depth_path)
+			os.mkdir(camera_8_rgb_path)
+			os.mkdir(camera_8_depth_path)
+		except:
+			pass
+		images_rgb = []
+		images_depth = []
+
 		for i in range(0,400):
 			# p.configureDebugVisualizer(p.COV_ENABLE_SINGLE_STEP_RENDERING)
+
+			# camera 1
+			images = p.getCameraImage(width, height, view_matrix_camera_1, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb1.append(rgb_opengl)
+			images_depth1.append(depth_opengl)
+
+			# camera 2
+			images = p.getCameraImage(width, height, view_matrix_camera_2, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb2.append(rgb_opengl)
+			images_depth2.append(depth_opengl)
+
+			# camera 3
+			images = p.getCameraImage(width, height, view_matrix_camera_3, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb3.append(rgb_opengl)
+			images_depth3.append(depth_opengl)
+
+			# camera 4
+			images = p.getCameraImage(width, height, view_matrix_camera_4, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb4.append(rgb_opengl)
+			images_depth4.append(depth_opengl)
+
+			# camera 5
+			images = p.getCameraImage(width, height, view_matrix_camera_5, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb5.append(rgb_opengl)
+			images_depth5.append(depth_opengl)
+
+			# camera 6
+			images = p.getCameraImage(width, height, view_matrix_camera_6, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb6.append(rgb_opengl)
+			images_depth6.append(depth_opengl)
+
+			# camera 7
+			images = p.getCameraImage(width, height, view_matrix_camera_7, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb7.append(rgb_opengl)
+			images_depth7.append(depth_opengl)
+
+			# camera 8
+			images = p.getCameraImage(width, height, view_matrix_camera_8, projection_matrix, shadow=True, renderer=p.ER_BULLET_HARDWARE_OPENGL)
+			rgb_opengl = np.reshape(images[2], (height, width, 4)) * 1. / 255.
+			depth_buffer_opengl = np.reshape(images[3], [width, height])
+			depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+			images_rgb8.append(rgb_opengl)
+			images_depth8.append(depth_opengl)
+
 
 			j1p = p.getJointState(panda.franka, 0)[0]
 			j2p = p.getJointState(panda.franka, 1)[0]
@@ -201,7 +349,6 @@ for current_cluster in cluster_order:
 			j6v = p.getJointState(panda.franka, 5)[1]
 			j7v = p.getJointState(panda.franka, 6)[1]
 			robot_data_store_velocity.append([j1v, j2v, j3v, j4v, j5v, j6v, j7v])
-
 
 			if i < 150:
 				panda.step_from_ros(trajectory_simple[0])
@@ -256,27 +403,45 @@ for current_cluster in cluster_order:
 			time.sleep(timeStep)
 
 		p.disconnect()
-		with open('data_set_001/straw_1/data_set_'+ str(file_name) + "_strawberry_data_store_1" +'.csv', "w", newline="") as f:
+
+		store_hf5_images(camera_1_rgb_path, images_rgb1)
+		store_hf5_images(camera_1_depth_path, images_depth1)
+		store_hf5_images(camera_2_rgb_path, images_rgb2)
+		store_hf5_images(camera_2_depth_path, images_depth2)
+		store_hf5_images(camera_3_rgb_path, images_rgb3)
+		store_hf5_images(camera_3_depth_path, images_depth3)
+		store_hf5_images(camera_4_rgb_path, images_rgb4)
+		store_hf5_images(camera_4_depth_path, images_depth4)
+		store_hf5_images(camera_5_rgb_path, images_rgb5)
+		store_hf5_images(camera_5_depth_path, images_depth5)
+		store_hf5_images(camera_6_rgb_path, images_rgb6)
+		store_hf5_images(camera_6_depth_path, images_depth6)
+		store_hf5_images(camera_7_rgb_path, images_rgb7)
+		store_hf5_images(camera_7_depth_path, images_depth7)
+		store_hf5_images(camera_8_rgb_path, images_rgb8)
+		store_hf5_images(camera_8_depth_path, images_depth8)
+
+		with open('data_set_002/straw_1/data_set_'+ str(file_name) + "_strawberry_data_store_1" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(strawberry_data_store_1)
-		with open('data_set_001/straw_2/data_set_'+ str(file_name) + "_strawberry_data_store_2" +'.csv', "w", newline="") as f:
+		with open('data_set_002/straw_2/data_set_'+ str(file_name) + "_strawberry_data_store_2" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(strawberry_data_store_2)
-		with open('data_set_001/straw_3/data_set_'+ str(file_name) + "_strawberry_data_store_3" +'.csv', "w", newline="") as f:
+		with open('data_set_002/straw_3/data_set_'+ str(file_name) + "_strawberry_data_store_3" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(strawberry_data_store_3)
-		with open('data_set_001/straw_4/data_set_'+ str(file_name) + "_strawberry_data_store_4" +'.csv', "w", newline="") as f:
+		with open('data_set_002/straw_4/data_set_'+ str(file_name) + "_strawberry_data_store_4" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(strawberry_data_store_4)
-		with open('data_set_001/straw_5/data_set_'+ str(file_name) + "_strawberry_data_store_5" +'.csv', "w", newline="") as f:
+		with open('data_set_002/straw_5/data_set_'+ str(file_name) + "_strawberry_data_store_5" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(strawberry_data_store_5)
-		with open('data_set_001/robot_pos/data_set_'+ str(file_name) + "_robot_data_store_position" + '.csv', "w", newline="") as f:
+		with open('data_set_002/robot_pos/data_set_'+ str(file_name) + "_robot_data_store_position" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(robot_data_store_position)
-		with open('data_set_001/robot_vel/data_set_'+ str(file_name) + "_robot_data_store_velocity" + '.csv', "w", newline="") as f:
+		with open('data_set_002/robot_vel/data_set_'+ str(file_name) + "_robot_data_store_velocity" + '.csv', "w", newline="") as f:
 			writer = csv.writer(f)
 			writer.writerows(robot_data_store_velocity)
 
 		file_name += 1
-		print(">>>>>>>>>>>>", file_name, " / ", (len(trajectory_list) * 6))
+		print(">>>>>>>>>>>>", file_name, " / ", (len(trajectory_list) * 11))
