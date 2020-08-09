@@ -198,11 +198,18 @@ for current_cluster in cluster_order:
             start_pose_5 = [False]
             start_ori_5 = [False]
 
-        strawberry_data_store_1 = [[start_pose_1, start_ori_1]]
-        strawberry_data_store_2 = [[start_pose_2, start_ori_2]]
-        strawberry_data_store_3 = [[start_pose_3, start_ori_3]]
-        strawberry_data_store_4 = [[start_pose_4, start_ori_4]]
-        strawberry_data_store_5 = [[start_pose_5, start_ori_5]]
+        strawberry_data_store_1 = []
+        strawberry_data_store_2 = []
+        strawberry_data_store_3 = []
+        strawberry_data_store_4 = []
+        strawberry_data_store_5 = []
+
+
+        # strawberry_data_store_1 = [[start_pose_1, start_ori_1]]
+        # strawberry_data_store_2 = [[start_pose_2, start_ori_2]]
+        # strawberry_data_store_3 = [[start_pose_3, start_ori_3]]
+        # strawberry_data_store_4 = [[start_pose_4, start_ori_4]]
+        # strawberry_data_store_5 = [[start_pose_5, start_ori_5]]
 
         robot_data_store_position = []
         robot_data_store_velocity = []
