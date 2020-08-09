@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib
+import cv2
 import pandas as pd
 from PIL import Image
 import matplotlib.image as mpimg
@@ -11,19 +12,19 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D
-from tensorflow.keras.callbacks import EarlyStopping
-#from tensorflow.keras.layers.normalization import BatchNormalization
-np.random.seed(1000)
+# import tensorflow as tf
+# from tensorflow import keras
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D
+# from tensorflow.keras.callbacks import EarlyStopping
+# #from tensorflow.keras.layers.normalization import BatchNormalization
+# np.random.seed(1000)
 
-from tensorflow.keras.applications.resnet import preprocess_input
-from tensorflow.keras.preprocessing import image
+# from tensorflow.keras.applications.resnet import preprocess_input
+# from tensorflow.keras.preprocessing import image
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
+# from tensorflow.keras.models import Model
+# from tensorflow.keras.optimizers import Adam
 
 no_of_cameras = 8 + 1
 data_set_length = 5
@@ -56,6 +57,7 @@ myScaler = scaler.fit(robot_states_frame_rate)
 robot_states_frame_rate = myScaler.transform(robot_states_frame_rate)
 robot_states_frame_rate = pd.DataFrame(robot_states_frame_rate, columns=robot_state_names)
 print(robot_states_frame_rate.shape)
+
 ################################## Load Strawberry Data ##################################################################
 strawberry_1 = pd.read_csv('/vol/hd/mfpc_data/data_set_003/straw_1/data_set_' + str(0) + '_strawberry_data_store_1.csv', delimiter=',', error_bad_lines=False,  header=None)
 strawberry_2 = pd.read_csv('/vol/hd/mfpc_data/data_set_003/straw_2/data_set_' + str(0) + '_strawberry_data_store_2.csv', delimiter=',', error_bad_lines=False, header=None)
@@ -109,12 +111,13 @@ strawberry_states_frame_rate = myScaler.transform(strawberry_states_frame_rate)
 strawberry_states_frame_rate = pd.DataFrame(strawberry_states_frame_rate, columns=strawberry_state_names)
 print(strawberry_states_frame_rate.shape)
 
-# ############################################### Load image data #####################################################
+############################################### Load image data #####################################################
 images = []
 for camera in range(1, no_of_cameras):
+    print("camera: ", camera)
     for i in range(0, data_set_length):
         for j in range(0, 50):
-            im_frame = mpimg.imread('/vol/hd/mfpc_data/data_set_003/camera_' + str(camera) + '/rgb/sample_' + str(i) + '/time_step_' + str(j) + '.png')
+            im_frame = cv2.imread('/vol/hd/mfpc_data/data_set_003/camera_' + str(camera) + '/rgb/sample_' + str(i) + '/time_step_' + str(j) + '.png')
             images.append(im_frame)
 
 train_images = np.asarray(images[0:1500])
@@ -144,7 +147,7 @@ robot_state_test_label = strawberry_states_frame_rate[train_images.shape[0]:trai
 print("Robot state label testset size: {}".format(robot_state_test_label.shape))
 
 ########################################################## Define AlexNet CNN ####################################################
-image_input_layer = keras.layers.Input(shape=(224,224,3))
+image_input_layer = keras.layers.Input(shape=(350,350,3))
 
 layer_conv_1 = keras.layers.Conv2D(filters=96, kernel_size=(11,11), strides=(4,4), padding='valid', activation="relu")(image_input_layer)
 layer_pooling_1 = keras.layers.MaxPool2D(pool_size=(2,2), strides=(2,2), padding='valid')(layer_conv_1)
