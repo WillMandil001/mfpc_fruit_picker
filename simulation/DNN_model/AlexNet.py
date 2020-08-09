@@ -1,30 +1,21 @@
-import numpy as np
-import matplotlib
 import cv2
+import matplotlib
+import numpy as np
 import pandas as pd
 from PIL import Image
+import tensorflow as tf
+from tensorflow import keras
 import matplotlib.image as mpimg
-from sklearn import preprocessing
 from matplotlib import pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D
+from tensorflow.keras.callbacks import EarlyStopping
+np.random.seed(1000)
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.resnet import preprocess_input
 
-
-import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
-
-# import tensorflow as tf
-# from tensorflow import keras
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv2D, MaxPooling2D
-# from tensorflow.keras.callbacks import EarlyStopping
-# #from tensorflow.keras.layers.normalization import BatchNormalization
-# np.random.seed(1000)
-
-# from tensorflow.keras.applications.resnet import preprocess_input
-# from tensorflow.keras.preprocessing import image
-
-# from tensorflow.keras.models import Model
-# from tensorflow.keras.optimizers import Adam
 
 no_of_cameras = 8 + 1
 data_set_length = 5
