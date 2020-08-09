@@ -20,14 +20,14 @@ from PIL import Image
 
 
 def read_hf5_images(hdf5_dir):
-	with h5py.File(hdf5_dir + "/" + str(400) + '.h5', 'r') as hf:
+	with h5py.File(hdf5_dir + "/" + str(50) + '.h5', 'r') as hf:
 	    data = hf['images'][:]
 	return data
 
 camera_1_rgb_path = "data_set_002/camera_1/rgb/sample_" + str(0)
 camera_1_depth_path = "data_set_002/camera_1/depth/sample_" + str(0)
 
-image_data = read_hf5_images(camera_1_rgb_path)
+image_data = read_hf5_images(camera_1_depth_path)
 print(image_data[0].shape)
 for i in range(0, len(image_data)):
 	imgplot = plt.imshow(image_data[i])
