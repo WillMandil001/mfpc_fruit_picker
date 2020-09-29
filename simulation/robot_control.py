@@ -26,13 +26,17 @@ planeId = p.loadURDF("plane.urdf")
 
 ## Load franka:
 start_pos = [0,0,0]
-Joint_start_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.02]
+Joint_start_state = [-1.433995977309579, -1.7617816763032867, 1.4325302980067844, -2.5136029912385243, -1.5686485073323206, 1.8073010767995468, -2.34824539264451, 0.02, 0.02]
+# panda = franka_panda_new_ee_mfpc.FrankaPanda(p, start_pos, timeStep, Joint_start_state, MPC_traj_length)
+
+# start_pos = [0, 0, 0]
+# Joint_start_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.02]
 panda = franka_panda_new_EE.FrankaPanda(p, start_pos, timeStep, Joint_start_state)
 
-## load strawberry cluster:
-start_pose = [0.5, 0.5, 1.0]
-start_ori = [0, 0, 1, 0]
-cluster = strawberry_cluster.StrawberryCluster(p, start_pose, start_ori, "models/clusters_urdf/cluster_1.urdf")
+# ## load strawberry cluster:
+# start_pose = [0.5, 0.5, 1.0]
+# start_ori = [0, 0, 1, 0]
+# cluster = strawberry_cluster.StrawberryCluster(p, start_pose, start_ori, "models/clusters_urdf/cluster_1.urdf")
 
 # start_pose = [0.53, 0.53, 1.0]
 # start_ori = [0, 0, 0, 1]

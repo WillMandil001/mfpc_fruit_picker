@@ -2,7 +2,7 @@
 # file submit.sh
 #SBATCH --job-name=RCNLSTM
 #SBATCH -N 1
-#SBATCH --output=test_001.out
+#SBATCH --output=mfpc_all_models_002_OUPUT.out
 
 
 
@@ -13,4 +13,4 @@
 
 module add cuda/7.5
 
-srun python3 mfpc_alexnet.py
+srun python3 mfpc_all_models.py

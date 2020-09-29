@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gripper">
+
+  <xacro:macro name="endeffector_strawberry_gripper" params="arm_index tf_prefix parent_link output_sim *joint_pose">
+
+    <!-- Base Housing -->
+    <link name="${tf_prefix}${arm_index}_gripper_housing">
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.8"/>
+        <inertia
+          ixx="1.0" ixy="0.0" ixz="0.0"
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/HOUSING.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_gripper_arm_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <xacro:insert_block name="joint_pose" />
+    </joint>
+
+    <!-- Cutting Finger -->
+    <link name="${tf_prefix}${arm_index}_cutting_finger">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.008"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/CUTTING_FINGER.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_cutting_finger_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_cutting_finger"/>
+      <origin xyz="-0.02 -0.035 0.01" rpy="0 ${radians(50)} ${radians(60)}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.87" upper="0" effort="100" velocity="1"/>
+    </joint>
+
+    <!-- Inner Finger 1 -->
+    <link name="${tf_prefix}${arm_index}_inner_finger_1">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.005"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/INNER_FINGER.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_inner_finger_1_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_inner_finger_1"/>
+      <origin xyz="0.04 0 0.01" rpy="0 ${radians(50)} ${radians(180)}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.87" upper="0" effort="100" velocity="1"/>
+      <mimic joint="${tf_prefix}${arm_index}_cutting_finger_joint" multiplier="1" offset="0" />
+    </joint>
+
+    <!-- Inner Finger 2 -->
+    <link name="${tf_prefix}${arm_index}_inner_finger_2">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.005"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/MIRRORINNER_FINGER.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+      
+    </link>
+    
+    <joint name="${tf_prefix}${arm_index}_inner_finger_2_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_inner_finger_2"/>
+      <origin xyz="-0.02 0.035 0.01" rpy="0 ${radians(50)} ${radians(-60)}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.87" upper="0" effort="100" velocity="1"/>
+      <mimic joint="${tf_prefix}${arm_index}_cutting_finger_joint" multiplier="1" offset="0" />
+    </joint>
+
+    <!-- Outer Finger 1 -->
+    <link name="${tf_prefix}${arm_index}_outer_finger_1">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.006"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/OUTER_FINGER.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_outer_finger_1_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_outer_finger_1"/>
+      <origin xyz="-0.04 0 0.01" rpy="0 ${radians(45)} 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.79" upper="0" effort="100" velocity="1"/>
+      <mimic joint="${tf_prefix}${arm_index}_cutting_finger_joint" multiplier="1" offset="0" />            
+    </joint>
+
+    <!-- Outer Finger 2 -->
+    <link name="${tf_prefix}${arm_index}_outer_finger_2">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.006"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/OUTER_FINGER.stl" />
+        </geometry> 
+        <material name="graspberry/white" />
+      </visual>
+    
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_outer_finger_2_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_outer_finger_2"/>
+      <origin xyz="0.02 0.035 0.01" rpy="0 ${radians(45)} ${radians(-120)}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.79" upper="0" effort="100" velocity="1"/>
+      <mimic joint="${tf_prefix}${arm_index}_cutting_finger_joint" multiplier="1" offset="0" />
+    </joint>
+
+    <!-- Outer Finger 3 -->
+    <link name="${tf_prefix}${arm_index}_outer_finger_3">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.006"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/OUTER_FINGER.stl" />
+        </geometry>
+        <material name="graspberry/white" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_outer_finger_3_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_outer_finger_3"/>
+      <origin xyz="0.02 -0.035 0.01" rpy="0 ${radians(45)} ${radians(120)}"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.79" upper="0" effort="100" velocity="1"/>
+      <mimic joint="${tf_prefix}${arm_index}_cutting_finger_joint" multiplier="1" offset="0" />
+    </joint>
+
+  <!-- Cutting Blade Right -->
+    <link name="${tf_prefix}${arm_index}_cutter_right">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.006"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/CUTTER_R.stl" />
+        </geometry>
+        <material name="graspberry/alu" />
+      </visual>
+      
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_right_cutter_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_cutting_finger"/>
+      <child link="${tf_prefix}${arm_index}_cutter_right"/>
+      <origin xyz="0.004 -0.006 0.035" rpy="0 ${radians(105)} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.09" upper="0" effort="1000" velocity="0.7"/>
+      <dynamics damping="0.02" friction="0.0" />
+    </joint>
+
+  <!-- Cutting Blade Left -->
+  <link name="${tf_prefix}${arm_index}_cutter_left">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.007"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/CUTTER_L.stl" />
+        </geometry>
+        <material name="graspberry/alu" />
+      </visual>
+
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_left_cutter_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_cutting_finger"/>
+      <child link="${tf_prefix}${arm_index}_cutter_left"/>
+      <origin xyz="0.004 0.007 0.035" rpy="0 ${radians(105)} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0" upper="2.09" effort="100" velocity="0.7"/>
+      <mimic joint="${tf_prefix}${arm_index}_right_cutter_joint" multiplier="-1" offset="0" />
+      <dynamics damping="0.02" friction="0.0" />
+    </joint>
+
+  <!-- Punnet Clamp -->
+    <link name="${tf_prefix}${arm_index}_punnet_clamp">
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.003"/>
+        <inertia 
+          ixx="1.0" ixy="0.0" ixz="0.0" 
+          iyy="1.0" iyz="0.0" 
+          izz="1.0"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://graspberry_description/gripper/meshes/BASKET_CLAMP.stl" />
+        </geometry>
+        <material name="graspberry/black" />
+      </visual>
+      
+    </link>
+
+    <joint name="${tf_prefix}${arm_index}_punnet_clamp_joint" type="revolute">
+      <parent link="${tf_prefix}${arm_index}_gripper_housing"/>
+      <child link="${tf_prefix}${arm_index}_punnet_clamp"/>
+      <origin xyz="-0.023 0.003 -0.025" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-1.57" upper="0" effort="100" velocity="1"/>
+    </joint>
+
+  <xacro:if value="${output_sim}" >
+      <xacro:include filename="$(find graspberry_description)/gripper/urdf/gripper.gazebo.xacro" />
+    </xacro:if>
+
+  </xacro:macro>
+</robot>

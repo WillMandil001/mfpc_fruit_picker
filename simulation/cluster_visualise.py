@@ -22,7 +22,7 @@ file_name = 0
 trajectories = []
 clusters = ["I", "H", "F", "D", "B"]
 cluster_order = [[1,0,0,0,0],
-                [1,1,1,1,1],
+                [1,1,1,0,0],
                 [1,1,1,0,0],
                 [1,1,0,1,0],
                 [1,1,0,0,1],
@@ -46,8 +46,6 @@ with open(os.path.expanduser('~/trajectories_cartesian_circle.csv'), newline='')
 strawberry_pose = strawberry_pose.split(",")
 for index, item in enumerate(strawberry_pose):
     strawberry_pose[index] = float(item)
-
-
 
 current_cluster = cluster_order[1]
 # p.connect(p.DIRECT)
