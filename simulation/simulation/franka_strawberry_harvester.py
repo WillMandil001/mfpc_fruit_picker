@@ -16,12 +16,12 @@ jointPositions=[0.98, 0.458, 0.31, -2.24, -0.30, 2.66, 2.32]
 rp = jointPositions
 
 class FrankaPanda(object):
-	def __init__(self, p, offset, time_step, start_state):
+	def __init__(self, p, offset, time_step, start_state, model_file):
 		self.time_step = time_step
 		self.offset = np.array(offset)
 		self.p = p
 		self.t = 0.
-		self.franka = self.p.loadURDF("/models/panda_no_gripper/panda.urdf", np.array([0,0,0]), [0,0,0,1], useFixedBase=True)
+		self.franka = self.p.loadURDF(model_file, np.array([0,0,0]), [0,0,0,1], useFixedBase=True)
 		# self.franka = self.p.loadURDF("franka_panda/panda.urdf", np.array([0,0,0]), [0,0,0,1], useFixedBase=True)  # , flags=flags # flags = p.URDF_ENABLE_CACHED_GRAPHICS_SHAPES
 		jointPositions=start_state
 		# jointPositions=[0.98, 0.458, 0.31, -2.24, -0.30, 2.66, 2.32, 0.02, 0.02]
