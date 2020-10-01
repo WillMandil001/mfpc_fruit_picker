@@ -51,7 +51,37 @@ def control_strawberry(strawberry):
     cluster_p_state = p.getJointState(strawberry.pendulum, 2)[0]
     cluster_y_state = p.getJointState(strawberry.pendulum, 3)[0]
     strawberry.pd_controller_step(cluster_r_state, cluster_p_state, cluster_y_state)
-    return 
+
+def format_trajectory(trajectory):
+    for index, item in enumerate(trajectory):
+        try:
+            trajectory[index] = item.split(')","')
+        except:
+            pass
+    trajectory = list(itertools.chain(*trajectory))
+    step = []
+    trajectory_simple = []
+    for index, item in enumerate(trajectory):
+        if "(" in item:
+            trajectory_simple.append(step)
+            step = []
+        step.append(float(trajectory[index].replace('"', "").replace("(", "").replace(",", "").replace(")", "")))
+    trajectory_simple.pop(0)
+    return trajectory_simple
+
+################################################### Read in ROS generated trajectories ###################################################
+trajectories = []
+with open(os.path.expanduser('~/trajectories_cartesian_circle.csv'), newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+    i = 0
+    for row in spamreader:
+        if i == 0:
+            strawberry_pose = row[0]
+        else:
+            trajectories.append(row)
+        i+=1
+trajectory = format_trajectory(trajectories[random.randint(0, 9999)])  # just one random trajectory to loop through
+
 ################################################### Set initial variables for simulation #################################################
 # p.connect(p.DIRECT)
 p.connect(p.GUI)
@@ -66,7 +96,7 @@ planeId = p.loadURDF("plane.urdf")
 start_pos = [0, 0, 0]
 Joint_start_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.02]
 robot_file_name = "/home/will/Robotics/mfpc_fruit_picking/src/simulation/models/panda_no_gripper/panda.urdf"
-panda = franka_strawberry_harvester.FrankaPanda(p, start_pos, timeStep, Joint_start_state, robot_file_name)
+panda = franka_strawberry_harvester.FrankaPanda(p, start_pos, timeStep, trajectory[0], robot_file_name)
 
 robot_data_store_position = []
 robot_data_store_velocity = []
@@ -151,12 +181,12 @@ for i in range(0, 200):
     robot_data_store_velocity.append(robot_vel)
 
     ## Control the robot:
-    # if i < 50:
-    #     panda.step_from_ros(trajectory_simple[0])
-    # elif i > 50 and i-50 < len(trajectory_simple):
-    #     panda.step_from_ros(trajectory_simple[i-50])
-    # else:
-    #     panda.step_from_ros(trajectory_simple[-1])
+    if i < 50:
+        panda.step_from_ros(trajectory[0])
+    elif i > 50 and i-50 < len(trajectory):
+        panda.step_from_ros(trajectory[i-50])
+    else:
+        panda.step_from_ros(trajectory[-1])
 
     ### Control the strawberries PID controller:
     control_strawberry(strawberry_1)
@@ -167,7 +197,6 @@ for i in range(0, 200):
 
     control_strawberry(strawberry_3)
     strawberry_data_store_3.append(list(p.getLinkState(strawberry_3.pendulum, 4)[0] + p.getLinkState(strawberry_3.pendulum, 4)[1]))
-
 
     p.stepSimulation()
     time.sleep(timeStep)
