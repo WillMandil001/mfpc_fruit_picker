@@ -102,7 +102,8 @@ robot_data_store_position = []
 robot_data_store_velocity = []
 
 ################################################### Load strawberries ####################################################################
-strawberry_file_name = "/home/will/Robotics/mfpc_fruit_picking/src/simulation/models/clusters_urdf/strawberry_cluster.urdf"
+# strawberry_file_name = "/home/will/Robotics/mfpc_fruit_picking/src/simulation/models/clusters_urdf/strawberry_cluster.urdf"
+strawberry_file_name = "/home/will/Robotics/mfpc_fruit_picking/src/simulation/models/clusters_urdf/strawberry_no_stem.urdf"
 
 # Load CENTER strawberry:
 start_pose_1 = []
@@ -160,7 +161,8 @@ fov = 69.4
 aspect = width / height
 near = 0.02
 far = 1.5
-view_matrix_camera_1 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0.5,0,0.45], distance=0.05, yaw=0, pitch=90, roll=0, upAxisIndex=2)
+# view_matrix_camera_1 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0.5,0,0.45], distance=0.05, yaw=0, pitch=90, roll=0, upAxisIndex=2)
+view_matrix_camera_1 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0.5,0,0.7], distance=0.05, yaw=0, pitch=-90, roll=0, upAxisIndex=2)
 projection_matrix = p.computeProjectionMatrixFOV(fov, aspect, near, far)
 
 images_rgb1 = []
